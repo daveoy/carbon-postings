@@ -12,6 +12,30 @@ metadata:
   name: image-puller
   namespace: postings
 ---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: postings
+  name: postings
+rules:
+- apiGroups: ["batch"]
+  resources: ["jobs"]
+  verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pods
+  namespace: default
+subjects:
+- kind: serviceaccount
+  name: image-puller
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role 
+  name: postings
+  apiGroup: rbac.authorization.k8s.io
+---
 apiVersion: secrets-store.csi.x-k8s.io/v1
 kind: SecretProviderClass
 metadata:
@@ -62,6 +86,7 @@ spec:
       containers:
       - name: sources
         image: registry.carbonvfx.com/engineering/postings:sources-latest
+        imagePullPolicy: Always
         resources:
           limits:
             memory: "512Mi"

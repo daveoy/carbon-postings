@@ -5,7 +5,7 @@ from postings import Source
 from kubernetes import client
 from kubernetes import config
 
-config.load_kube_config()
+config.load_incluster_config()
 logging.basicConfig(level=logging.INFO)
 
 JOBS_ROOT = '/mnt/jobs'
