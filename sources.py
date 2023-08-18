@@ -18,8 +18,12 @@ def start_transcode(src: Source):
         "apiVersion": "batch/v1",
         "kind": "Job",
         "metadata":{
-            "name": f"{src.filename.split('.')[0]}-{src.date}-{src.time}".replace('_','-').lower(),
-            "namespace": "postings"
+            "name": f"{src.filename.split('.')[0]}-{src.date}-{src.time}".replace('_','-').lower()[:50],
+            "namespace": "postings",
+            "annotations": {
+                "path": src.path,
+                "project":src.project
+            },
         },
         "spec":{
             "template":{
@@ -53,7 +57,7 @@ def start_transcode(src: Source):
                     "serviceAccountName": "image-puller",
                     "containers":[
                         {
-                            "name": f"{src.filename.split('.')[0]}-{src.date}-{src.time}".replace('_','-').lower(),
+                            "name": f"{src.filename.split('.')[0]}-{src.date}-{src.time}".replace('_','-').lower()[:50],
                             "image": "registry.carbonvfx.com/engineering/postings:transcode-latest",
                             "args":[
                                 src.path
