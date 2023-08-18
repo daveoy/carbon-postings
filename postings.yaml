@@ -1,0 +1,75 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: postings
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::778348368122:role/eks_postings_sa
+  name: image-puller
+  namespace: postings
+---
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: regcred
+  namespace: postings
+spec:
+  parameters:
+    objects: |
+      - objectName: "regcred"
+        objectType: "secretsmanager"
+    region: us-east-2
+  provider: aws
+  secretObjects:
+  - secretName: regcred
+    type: kubernetes.io/dockerconfigjson
+    data:
+    - key: .dockerconfigjson
+      objectName: regcred
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postings
+  namespace: postings
+spec:
+  selector:
+    matchLabels:
+      app: postings
+  template:
+    metadata:
+      labels:
+        app: postings
+    spec:
+      volumes:
+      - name: secrets-store-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "regcred"
+      - name: weka-jobs
+        nfs:
+          server: 10.70.50.117
+          path: /vfx/vfx/Jobs/tmobile_metro_235890
+      imagePullSecrets:
+      - name: regcred
+      serviceAccountName: image-puller
+      containers:
+      - name: sources
+        image: registry.carbonvfx.com/engineering/postings:sources-latest
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+        volumeMounts:
+          - name: secrets-store-inline
+            mountPath: "/secrets-store"
+            readOnly: true
+          - name: weka-jobs
+            mountPath: /mnt/jobs/tmobile_metro_235890
+            readOnly: false
