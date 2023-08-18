@@ -1,6 +1,8 @@
 import os
 import glob
 import logging
+import uuid
+
 from postings import Source
 from kubernetes import client
 from kubernetes import config
@@ -10,15 +12,16 @@ logging.basicConfig(level=logging.INFO)
 
 JOBS_ROOT = '/mnt/jobs'
 def get_sources(d: str):
-    return [Source(x) for x in glob.glob(f"{os.path.join(JOBS_ROOT,d,'library/postings/source')}/**/*.mov",recursive=True)]
+    return [Source(x) for x in glob.glob(f"{os.path.join(JOBS_ROOT,d,'library/postings/source')}/*/*/*.mov",recursive=True)]
 
 def start_transcode(src: Source):
     logging.info(f"creating job: {src.filename.split('.')[0]}-{src.date}-{src.time}")
+    job_id = str(uuid.uuid4())
     job_spec = {
         "apiVersion": "batch/v1",
         "kind": "Job",
         "metadata":{
-            "name": f"{src.filename.split('.')[0]}-{src.date}-{src.time}".replace('_','-').replace(' ','').lower()[:63],
+            "name": job_id,
             "namespace": "postings",
             "annotations": {
                 "source/path": src.path,
@@ -30,6 +33,16 @@ def start_transcode(src: Source):
                 "transcode/filename": src.output.filename,
                 "transcode/date": src.output.date
             },
+            "labels": {
+                "src-path": src.path,
+                "project": src.project,
+                "src-date": src.date,
+                "src-time": src.time,
+                "src-filename": src.filename,
+                "transcode-path": src.output.path,
+                "transcode-filename": src.output.filename,
+                "transcode-date": src.output.date
+            }
         },
         "spec":{
             "template":{
@@ -50,7 +63,7 @@ def start_transcode(src: Source):
                             "name": "weka-jobs",
                             "nfs":{
                                 "server": "10.70.50.117",
-                                "path": "/vfx/vfx/Jobs/tmobile_metro_235890",
+                                "path": "/vfx/vfx/Jobs/",
                                 "readOnly": False,
                             }
                         }
@@ -63,7 +76,7 @@ def start_transcode(src: Source):
                     "serviceAccountName": "image-puller",
                     "containers":[
                         {
-                            "name": f"{src.filename.split('.')[0]}-{src.date}-{src.time}".replace('_','-').replace(' ','').lower()[:63],
+                            "name": job_id,
                             "image": "registry.carbonvfx.com/engineering/postings:transcode-latest",
                             "args":[
                                 src.path
@@ -86,7 +99,7 @@ def start_transcode(src: Source):
                                 },
                                 {   
                                     "name": "weka-jobs",
-                                    "mountPath": "/mnt/jobs/tmobile_metro_235890",
+                                    "mountPath": "/mnt/jobs/",
                                     "readOnly": False
                                 }
                             ]
@@ -99,8 +112,12 @@ def start_transcode(src: Source):
     batch_api = client.BatchV1Api()
     try:
         batch_api.create_namespaced_job("postings", job_spec)
-    except ApiException as e:
-        print(e)
+    except kubernetes.client.exceptions.ApiException as e:
+        if e.status == 409:
+            print(f"job already exists")
+            print(e)
+        else:
+            raise e
     return
 
 if __name__ == "__main__":
