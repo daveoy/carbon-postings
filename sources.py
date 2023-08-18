@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 
 JOBS_ROOT = '/mnt/jobs'
 def get_sources(d: str):
-    return [Source(x) for x in glob.glob(f"{os.path.join(JOBS_ROOT,d,'library/postings/source')}/**/*.mov",recursive=True) if x.transcoded == False]
+    return [Source(x) for x in glob.glob(f"{os.path.join(JOBS_ROOT,d,'library/postings/source')}/**/*.mov",recursive=True)]
 
 def start_transcode(src: Source):
     k8s = Kubernetes()
@@ -72,4 +72,4 @@ class Kubernetes:
 if __name__ == "__main__":
     while True:
         for job in os.listdir(JOBS_ROOT):
-            [start_transcode(x) for x in get_sources(job)]
+            [start_transcode(x) for x in get_sources(job) if x.transcoded == False]
