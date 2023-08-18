@@ -32,16 +32,6 @@ def start_transcode(src: Source):
                 "transcode/path": src.output.path,
                 "transcode/filename": src.output.filename,
                 "transcode/date": src.output.date
-            },
-            "labels": {
-                "src-path": src.path,
-                "project": src.project,
-                "src-date": src.date,
-                "src-time": src.time,
-                "src-filename": src.filename,
-                "transcode-path": src.output.path,
-                "transcode-filename": src.output.filename,
-                "transcode-date": src.output.date
             }
         },
         "spec":{
@@ -112,7 +102,7 @@ def start_transcode(src: Source):
     batch_api = client.BatchV1Api()
     try:
         batch_api.create_namespaced_job("postings", job_spec)
-    except kubernetes.client.exceptions.ApiException as e:
+    except client.exceptions.ApiException as e:
         if e.status == 409:
             print(f"job already exists")
             print(e)
