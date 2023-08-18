@@ -1,7 +1,9 @@
 import os
 import glob
 import logging
+import json
 import uuid
+import time
 
 from postings import Source
 from kubernetes import client
@@ -14,9 +16,25 @@ JOBS_ROOT = '/mnt/jobs'
 def get_sources(d: str):
     return [Source(x) for x in glob.glob(f"{os.path.join(JOBS_ROOT,d,'library/postings/source')}/*/*/*.mov",recursive=True)]
 
+def check_job_running(path):
+    batch_api = client.BatchV1Api()
+    jobs = batch_api.list_namespaced_job(namespace='postings')
+    for job in jobs.items:
+        if job.metadata.annotations['source/path'] == path:
+            return True
+    return False
+
 def start_transcode(src: Source):
-    logging.info(f"creating job: {src.filename.split('.')[0]}-{src.date}-{src.time}")
     job_id = str(uuid.uuid4())
+    logging.info(
+        json.dumps({
+            "job":job_id,
+            "project": src.project,
+            "date": src.date,
+            "time": src.time,
+            "filename": src.filename
+        })
+    )
     job_spec = {
         "apiVersion": "batch/v1",
         "kind": "Job",
@@ -99,8 +117,9 @@ def start_transcode(src: Source):
             }
         }
     }
-    batch_api = client.BatchV1Api()
+
     try:
+        batch_api = client.BatchV1Api()
         batch_api.create_namespaced_job("postings", job_spec)
     except client.exceptions.ApiException as e:
         if e.status == 409:
@@ -113,4 +132,5 @@ def start_transcode(src: Source):
 if __name__ == "__main__":
     while True:
         for job in os.listdir(JOBS_ROOT):
-            [start_transcode(x) for x in get_sources(job) if x.output.transcoded == False]
+            [start_transcode(x) for x in get_sources(job) if x.output.transcoded == False and check_job_running(x.path) == False]
+        time.sleep(60)
