@@ -34,6 +34,7 @@ def start_transcode(src: Source):
         "spec":{
             "template":{
                 "spec":{
+                    "restartPolicy":"OnFailure",
                     "volumes":[
                         {
                             "name": "secrets-store-inline",
