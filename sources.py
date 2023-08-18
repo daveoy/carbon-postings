@@ -57,7 +57,7 @@ def start_transcode(src: Source):
                             "image": "registry.carbonvfx.com/engineering/postings:transcode-latest",
                             "args":[
                                 src.filename
-                            ]
+                            ],
                             "volumeMounts":[
                                 {   
                                     "name": "secrets-store-inline",
