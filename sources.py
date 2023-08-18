@@ -72,4 +72,4 @@ class Kubernetes:
 if __name__ == "__main__":
     while True:
         for job in os.listdir(JOBS_ROOT):
-            [start_transcode(x) for x in get_sources(job) if x.transcoded == False]
+            [start_transcode(x) for x in get_sources(job) if x.output.transcoded == False]
