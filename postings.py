@@ -26,7 +26,7 @@ class Source:
         self.filename = self.path.split(os.path.sep)[-1]
         self.time = self.path.split(os.path.sep)[-2]
         self.date = self.path.split(os.path.sep)[-3]
-        self.project = self.path.split(os.path.sep)[2]
+        self.project = self.path.split(os.path.sep)[3]
         self.output = Transcode(self)
     def transcode(self):
         self.output.ensure_container_exists()
