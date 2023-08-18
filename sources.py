@@ -30,7 +30,7 @@ def start_transcode(src: Source):
                             "name": "secrets-store-inline",
                             "csi":{
                                 "driver": "secrets-store.csi.k8s.io",
-                                "readOnly": "true",
+                                "readOnly": True,
                                 "volumeAttributes":{
                                     "secretProviderClass": "regcred",
                                 },
@@ -41,7 +41,7 @@ def start_transcode(src: Source):
                             "nfs":{
                                 "server": "10.70.50.117",
                                 "path": "/vfx/vfx/Jobs/tmobile_metro_235890",
-                                "readOnly": "false",
+                                "readOnly": False,
                             }
                         }
                     ],
@@ -59,12 +59,12 @@ def start_transcode(src: Source):
                                 {   
                                     "name": "secrets-store-inline",
                                     "mountPath": "/secrets-store",
-                                    "readOnly": "true"
+                                    "readOnly": True
                                 },
                                 {   
                                     "name": "weka-jobs",
                                     "mountPath": "/mnt/jobs/tmobile_metro_235890",
-                                    "readOnly": "false"
+                                    "readOnly": False
                                 }
                             ]
                         }
