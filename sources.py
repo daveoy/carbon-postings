@@ -21,14 +21,19 @@ def start_transcode(src: Source):
             "name": f"{src.filename.split('.')[0]}-{src.date}-{src.time}".replace('_','-').lower()[:50],
             "namespace": "postings",
             "annotations": {
-                "path": src.path,
-                "project":src.project
+                "source/path": src.path,
+                "source/project": src.project,
+                "source/date": src.date,
+                "source/time": src.time,
+                "source/filename": src.filename,
+                "transcode/path": src.output.path,
+                "transcode/filename": src.output.filename,
+                "transcode/date": src.output.date
             },
         },
         "spec":{
             "template":{
                 "spec":{
-                    "restartPolicy": "Never",
                     "volumes":[
                         {
                             "name": "secrets-store-inline",
@@ -62,6 +67,16 @@ def start_transcode(src: Source):
                             "args":[
                                 src.path
                             ],
+                            "resources":{
+                                "limits":{
+                                    "cpu":"2",
+                                    "memory":"2G"
+                                },
+                                "requests":{
+                                    "cpu":"1",
+                                    "memory":"1G"
+                                }
+                            },
                             "volumeMounts":[
                                 {   
                                     "name": "secrets-store-inline",
