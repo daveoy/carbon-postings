@@ -79,7 +79,7 @@ spec:
       - name: weka-jobs
         nfs:
           server: 10.70.50.117
-          path: /vfx/vfx/Jobs/tmobile_metro_235890
+          path: /vfx/vfx/Jobs/
       imagePullSecrets:
       - name: regcred
       serviceAccountName: image-puller
@@ -96,5 +96,5 @@ spec:
             mountPath: "/secrets-store"
             readOnly: true
           - name: weka-jobs
-            mountPath: /mnt/jobs/tmobile_metro_235890
+            mountPath: /mnt/jobs/
             readOnly: false
