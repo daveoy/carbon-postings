@@ -18,7 +18,7 @@ def start_transcode(src: Source):
         "apiVersion": "batch/v1",
         "kind": "Job",
         "metadata":{
-            "name": f"{src.filename.split('.')[0]}-{src.date}-{src.time}".replace('_','-').lower()[:63],
+            "name": f"{src.filename.split('.')[0]}-{src.date}-{src.time}".replace('_','-').replace(' ','').lower()[:63],
             "namespace": "postings",
             "annotations": {
                 "source/path": src.path,
@@ -63,7 +63,7 @@ def start_transcode(src: Source):
                     "serviceAccountName": "image-puller",
                     "containers":[
                         {
-                            "name": f"{src.filename.split('.')[0]}-{src.date}-{src.time}".replace('_','-').lower()[:63],
+                            "name": f"{src.filename.split('.')[0]}-{src.date}-{src.time}".replace('_','-').replace(' ','').lower()[:63],
                             "image": "registry.carbonvfx.com/engineering/postings:transcode-latest",
                             "args":[
                                 src.path
@@ -97,7 +97,10 @@ def start_transcode(src: Source):
         }
     }
     batch_api = client.BatchV1Api()
-    batch_api.create_namespaced_job("postings", job_spec)
+    try:
+        batch_api.create_namespaced_job("postings", job_spec)
+    except ApiException as e:
+        print(e)
     return
 
 if __name__ == "__main__":
