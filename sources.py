@@ -56,7 +56,7 @@ def start_transcode(src: Source):
                             "name": f"{src.filename.split('.')[0]}-{src.date}-{src.time}".replace('_','-').lower(),
                             "image": "registry.carbonvfx.com/engineering/postings:transcode-latest",
                             "args":[
-                                src.filename
+                                src.path
                             ],
                             "volumeMounts":[
                                 {   
