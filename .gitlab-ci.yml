@@ -10,8 +10,6 @@ build-sources:
     - postings.py
     - sources.py
     - requirements-sources.txt
-  only:
-  - main
   services:
     - docker:19.03.12-dind
   variables:
@@ -35,8 +33,6 @@ build-transcode:
     - postings.py
     - transcode.py
     - requirements-transcode.py
-  only:
-  - main
   services:
     - docker:19.03.12-dind
   variables:
