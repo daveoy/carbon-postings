@@ -4,16 +4,13 @@ import os
 # this class describes the transcoded output
 class Transcode:
     def __init__(self,source):
-        self.filename = source.filename
+        self.filename = source.filename.replace('.mov','.mp4')
         self.date = f"{source.date[0:4]}_{source.date[4:6]}_{source.date[6:8]}_{source.time}"
         self.container = source.container.replace(
             f'source/{source.date}/{source.time}',
             f'transcode/{self.date}'
         )
-        self.path = source.path.replace(
-            f'source/{source.date}/{source.time}',
-            f'transcode/{self.date}'
-        )
+        self.path = os.path.join(self.container,self.filename)
         self.transcoded = self.check_transcoded()
     def check_transcoded(self):
         return os.path.exists(self.path)
