@@ -1,0 +1,52 @@
+stages:
+  - build
+
+build-sources:
+  stage: build
+  image: docker:19.03.12
+  rules:
+  - changes:
+    - Dockerfile.transcode
+    - postings.py
+    - sources.py
+    - requirements-sources.txt
+  only:
+  - main
+  services:
+    - docker:19.03.12-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - export COMMIT_TIME=$(date +%s)
+    - docker build . -f Dockerfile.sources -t $CI_REGISTRY_IMAGE:sources-$COMMIT_TIME
+    - docker tag $CI_REGISTRY_IMAGE:sources-$COMMIT_TIME $CI_REGISTRY_IMAGE:sources-latest
+    - docker push $CI_REGISTRY_IMAGE:sources-$COMMIT_TIME
+    - docker push $CI_REGISTRY_IMAGE:sources-latest
+
+build-transcode:
+  stage: build
+  image: docker:19.03.12
+  rules:
+  - changes:
+    - Dockerfile.transcode
+    - postings.py
+    - transcode.py
+    - requirements-transcode.py
+  only:
+  - main
+  services:
+    - docker:19.03.12-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - export COMMIT_TIME=$(date +%s)
+    - docker build . -f Dockerfile.transcode -t $CI_REGISTRY_IMAGE:transcode-$COMMIT_TIME
+    - docker tag $CI_REGISTRY_IMAGE:transcode-$COMMIT_TIME $CI_REGISTRY_IMAGE:transcode-latest
+    - docker push $CI_REGISTRY_IMAGE:transcode-$COMMIT_TIME
+    - docker push $CI_REGISTRY_IMAGE:transcode-latest

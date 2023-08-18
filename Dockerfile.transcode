@@ -1,0 +1,6 @@
+FROM jrottenberg/ffmpeg:6.0-alpine
+COPY ./requirements-transcode.txt /requirements-transcode.txt
+RUN apk add --no-cache python3 py3-pip && python3 -m pip install -r /requirements-transcode.txt
+COPY ./postings.py /postings.py
+COPY ./transcode.py /transcode.py
+ENTRYPOINT ["python3","/transcode.py"]

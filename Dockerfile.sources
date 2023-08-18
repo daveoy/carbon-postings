@@ -1,0 +1,6 @@
+FROM rockylinux:8.8-minimal
+COPY ./requirements-sources.txt /requirements-sources.txt
+COPY ./postings.py /postings.py
+COPY ./sources.py /sources.py
+RUN microdnf install python3 python3-pip && pip3 install -r /requirements-sources.txt
+ENTRYPOINT ["python3","/sources.py"]
