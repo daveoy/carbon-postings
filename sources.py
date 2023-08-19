@@ -1,6 +1,5 @@
 import os
 import glob
-import logging
 import json
 import uuid
 import time
@@ -10,7 +9,6 @@ from kubernetes import client
 from kubernetes import config
 
 config.load_incluster_config()
-logging.basicConfig(level=logging.INFO)
 
 JOBS_ROOT = '/mnt/jobs'
 def get_sources(d: str):
@@ -26,7 +24,7 @@ def check_job_running(path):
 
 def start_transcode(src: Source):
     job_id = str(uuid.uuid4())
-    logging.info(
+    print(
         json.dumps({
             "job":job_id,
             "project": src.project,
