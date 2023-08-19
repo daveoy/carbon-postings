@@ -84,6 +84,7 @@ def start_transcode(src: Source):
                         {
                             "name": job_id,
                             "image": "registry.carbonvfx.com/engineering/postings:transcode-latest",
+                            "imagePullPolicy":"Always",
                             "args":[
                                 src.path
                             ],
