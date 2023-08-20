@@ -131,6 +131,18 @@ def start_transcode(src: Source):
 
 if __name__ == "__main__":
     while True:
+        start_time = time.time()
+        print(
+            json.dumps({
+                "msg": f"starting scan loop {start_time}"
+            })
+        )
         for job in os.listdir(JOBS_ROOT):
             [start_transcode(x) for x in get_sources(job) if x.output.transcoded == False and check_job_running(x.path) == False]
         time.sleep(60)
+        loop_time = time.time() - start_time
+        print(
+            json.dumps({
+                "msg": f"finished scan loop in {loop_time} seconds"
+            })
+        )
