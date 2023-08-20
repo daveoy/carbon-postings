@@ -34,6 +34,7 @@ def start_transcode(src: Source):
             "filename": src.filename
         })
     )
+    sys.stdout.flush()
     job_spec = {
         "apiVersion": "batch/v1",
         "kind": "Job",
