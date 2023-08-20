@@ -32,5 +32,5 @@ class Source:
         self.output = Transcode(self)
     def transcode(self):
         self.output.ensure_container_exists()
-        ffmpeg.input(self.path).output(self.output.path,vcodec='h264').run()
+        ffmpeg.input(self.path).output(self.output.path,vcodec='h264').run(overwrite_output=True)
 
