@@ -94,7 +94,7 @@ spec:
       serviceAccountName: image-puller
       containers:
       - name: sources
-        image: registry.carbonvfx.com/engineering/postings:sources-latest
+        image: registry.carbonvfx.com/engineering/postings:sources-1692475831
         imagePullPolicy: Always
         resources:
           limits:
