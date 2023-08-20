@@ -51,6 +51,7 @@ def start_transcode(src: Source):
             }
         },
         "spec":{
+            "ttlSecondsAfterFinished":10,
             "template":{
                 "spec":{
                     "restartPolicy":"OnFailure",
