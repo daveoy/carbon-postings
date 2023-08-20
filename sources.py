@@ -3,6 +3,7 @@ import glob
 import json
 import uuid
 import time
+import sys
 
 from postings import Source
 from kubernetes import client
@@ -137,6 +138,7 @@ if __name__ == "__main__":
                 "msg": f"starting scan loop {start_time}"
             })
         )
+        sys.stdout.flush()
         for job in os.listdir(JOBS_ROOT):
             [start_transcode(x) for x in get_sources(job) if x.output.transcoded == False and check_job_running(x.path) == False]
         time.sleep(60)
@@ -146,3 +148,4 @@ if __name__ == "__main__":
                 "msg": f"finished scan loop in {loop_time} seconds"
             })
         )
+        sys.stdout.flush()
