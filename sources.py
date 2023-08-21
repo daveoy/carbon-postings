@@ -84,6 +84,14 @@ def start_transcode(src: Source):
                         },
                     ],
                     "serviceAccountName": "image-puller",
+                    "tolerations":[
+                        {
+                            "key":"workerPool",
+                            "operator": "Equal",
+                            "value":"true",
+                            "effect":"NoSchedule"
+                        }
+                    ],
                     "containers":[
                         {
                             "name": job_id,
