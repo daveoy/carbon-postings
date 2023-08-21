@@ -111,7 +111,7 @@ def start_transcode(src: Source):
                         {
                             "name": job_id,
                             "image": os.getenv('TRANSCODE_CONTAINER_IMAGE'),
-                            "imagePullPolicy":"Always",
+                            "imagePullPolicy":"IfNotPresent",
                             "args":[
                                 src.path
                             ],
