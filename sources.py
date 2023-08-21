@@ -62,10 +62,14 @@ def start_transcode(src: Source):
                             "requiredDuringSchedulingIgnoredDuringExecution":{
                                 "nodeSelectorTerms": [
                                     {
-                                        "key":"eks.amazonaws.com/capacityType",
-                                        "operator":"In",
-                                        "values":[
-                                            "SPOT"
+                                        "matchExpressions":[
+                                            {
+                                                "key":"eks.amazonaws.com/capacityType",
+                                                "operator":"In",
+                                                "values":[
+                                                    "SPOT"
+                                                ]
+                                            }
                                         ]
                                     }
                                 ]
