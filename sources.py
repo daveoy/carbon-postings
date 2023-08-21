@@ -57,6 +57,21 @@ def start_transcode(src: Source):
             "ttlSecondsAfterFinished":10,
             "template":{
                 "spec":{
+                    "affinity":{
+                        "nodeAffinity":{
+                            "requiredDuringSchedulingIgnoredDuringExecution":{
+                                "nodeSelectorTerms": [
+                                    {
+                                        "key":"eks.amazonaws.com/capacityType",
+                                        "operator":"In",
+                                        "values":[
+                                            "SPOT"
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
                     "restartPolicy":"OnFailure",
                     "volumes":[
                         {
