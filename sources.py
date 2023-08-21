@@ -101,10 +101,6 @@ def start_transcode(src: Source):
                                 src.path
                             ],
                             "resources":{
-                                "limits":{
-                                    "cpu":"2",
-                                    "memory":"2G"
-                                },
                                 "requests":{
                                     "cpu":"1",
                                     "memory":"1G"
