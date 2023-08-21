@@ -6,4 +6,4 @@ metadata:
   namespace: postings
 spec:
   hard:
-    pods: "15"
+    pods: "20"
