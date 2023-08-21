@@ -20,9 +20,9 @@ build-sources:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - export COMMIT_TIME=$(date +%s)
     - docker build . -f Dockerfile.sources -t $CI_REGISTRY_IMAGE:sources-$COMMIT_TIME
-    - docker tag $CI_REGISTRY_IMAGE:sources-$COMMIT_TIME $CI_REGISTRY_IMAGE:sources-latest
+    # - docker tag $CI_REGISTRY_IMAGE:sources-$COMMIT_TIME $CI_REGISTRY_IMAGE:sources-latest
     - docker push $CI_REGISTRY_IMAGE:sources-$COMMIT_TIME
-    - docker push $CI_REGISTRY_IMAGE:sources-latest
+    # - docker push $CI_REGISTRY_IMAGE:sources-latest
 
 build-transcode:
   stage: build
@@ -43,6 +43,6 @@ build-transcode:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - export COMMIT_TIME=$(date +%s)
     - docker build . -f Dockerfile.transcode -t $CI_REGISTRY_IMAGE:transcode-$COMMIT_TIME
-    - docker tag $CI_REGISTRY_IMAGE:transcode-$COMMIT_TIME $CI_REGISTRY_IMAGE:transcode-latest
+    # - docker tag $CI_REGISTRY_IMAGE:transcode-$COMMIT_TIME $CI_REGISTRY_IMAGE:transcode-latest
     - docker push $CI_REGISTRY_IMAGE:transcode-$COMMIT_TIME
-    - docker push $CI_REGISTRY_IMAGE:transcode-latest
+    # - docker push $CI_REGISTRY_IMAGE:transcode-latest
