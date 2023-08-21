@@ -31,7 +31,8 @@ def start_transcode(src: Source):
             "project": src.project,
             "date": src.date,
             "time": src.time,
-            "filename": src.filename
+            "filename": src.filename,
+            "msg":f"creating new job ({job_id}) to transcode {src.path} to {src.output.path}"
         })
     )
     sys.stdout.flush()
@@ -86,7 +87,7 @@ def start_transcode(src: Source):
                     "containers":[
                         {
                             "name": job_id,
-                            "image": "registry.carbonvfx.com/engineering/postings:transcode-1692534823",
+                            "image": os.getenv('TRANSCODE_CONTAINER_IMAGE'),
                             "imagePullPolicy":"Always",
                             "args":[
                                 src.path
