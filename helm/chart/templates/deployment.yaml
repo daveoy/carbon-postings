@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postings
+  namespace: postings
+spec:
+  selector:
+    matchLabels:
+      app: postings
+  template:
+    metadata:
+      labels:
+        app: postings
+    spec:
+      volumes:
+      - name: secrets-store-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "regcred"
+      - name: weka-jobs
+        nfs:
+          server: 10.70.50.117
+          path: /vfx/vfx/Jobs/
+      imagePullSecrets:
+      - name: regcred
+      serviceAccountName: image-puller
+      containers:
+      - name: sources
+        image: {{ .Values.sources.image }}
+        env:
+        - name: TRANSCODE_CONTAINER_IMAGE
+          value: {{ .Values.transcode.iamge }}
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+        volumeMounts:
+          - name: secrets-store-inline
+            mountPath: "/secrets-store"
+            readOnly: true
+          - name: weka-jobs
+            mountPath: /mnt/jobs/
+            readOnly: false
