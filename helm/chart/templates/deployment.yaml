@@ -32,7 +32,7 @@ spec:
         image: {{ .Values.sources.image }}
         env:
         - name: TRANSCODE_CONTAINER_IMAGE
-          value: {{ .Values.transcode.iamge }}
+          value: {{ .Values.transcode.image }}
         imagePullPolicy: Always
         resources:
           limits:
