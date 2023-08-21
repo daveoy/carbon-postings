@@ -6,7 +6,7 @@ class Transcode:
     def __init__(self,source):
         self.filename = source.filename.replace('.mov','.mp4')
         self.clean_source_date = source.date.replace('_','').replace('-','').replace(' ','')
-        self.date = f"AUTO_{self.clean_source_date[0:4]}_{self.clean_source_date[4:6]}_{self.clean_source_date[6:8]}_{source.time}"
+        self.date = f"{self.clean_source_date[0:4]}_{self.clean_source_date[4:6]}_{self.clean_source_date[6:8]}_{source.time}"
         self.container = source.container.replace(
             f"source/{source.date}/{source.time}",
             f"transcode/{self.date}"

@@ -21,4 +21,4 @@
 ## TODO
 
 - add scan.py which will submit separate, parallel sources.py jobs to speed up sync loops
-- replace sources.py transcode container image with env var, let flux update image tag env var?
+- -replace sources.py transcode container image with env var, let flux update image tag env var?-
