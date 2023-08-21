@@ -95,6 +95,9 @@ spec:
       containers:
       - name: sources
         image: registry.carbonvfx.com/engineering/postings:sources-1692534913
+        env:
+        - name: TRANSCODE_CONTAINER_IMAGE
+          value: "registry.carbonvfx.com/engineering/postings:transcode-1692534823"
         imagePullPolicy: Always
         resources:
           limits:
