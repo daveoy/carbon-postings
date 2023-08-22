@@ -1,5 +1,8 @@
 # postings
 
+# architecture
+![solution architecture](/arch.png "solution architecture")
+
 ## how it works
 
 - postings.py is a library of two classes, Source and Transcode
