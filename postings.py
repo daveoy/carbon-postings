@@ -1,5 +1,7 @@
 import ffmpeg
 import os
+import json
+import requests
 
 # this class describes the transcoded output
 class Transcode:
@@ -30,6 +32,20 @@ class Source:
         self.date = self.path.split(os.path.sep)[-3]
         self.project = self.path.split(os.path.sep)[3]
         self.output = Transcode(self)
+        self.webhookURL = "https://whitehousepost.webhook.office.com/webhookb2/dd6f12b1-92cd-42b8-bf21-fae1b5055581@f2cc8bed-6791-456d-833e-0a8d2c1ee8f6/IncomingWebhook/fb9729e5b6cd42a0b3d3534d645485b1/e7d508af-cd60-4109-a3a8-251f6085c3df"
+
+    def post_to_teams(self,msg_json):
+        headers = {
+            "content-type":"application/json"
+        }
+        body = {
+            "webhookUrl":self.webhookURL,
+            "title":f"posting {self.project}",
+            "message":json.dumps(msg_json),
+            "color":"green"
+        }
+        requests.post('https://engineering.carbonvfx.com/postToTeamsJSON',headers=headers,data=json.dumps(body))
+
     def transcode(self):
         self.output.ensure_container_exists()
         (

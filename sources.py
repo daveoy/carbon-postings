@@ -25,15 +25,17 @@ def check_job_running(path):
 
 def start_transcode(src: Source):
     job_id = str(uuid.uuid4())
+    info_json = {
+        "event":"sources",
+        "job":job_id,
+        "project": src.project,
+        "date": src.date,
+        "time": src.time,
+        "filename": src.filename,
+        "msg":f"creating new job ({job_id}) to transcode {src.path} to {src.output.path}"
+    }
     print(
-        json.dumps({
-            "job":job_id,
-            "project": src.project,
-            "date": src.date,
-            "time": src.time,
-            "filename": src.filename,
-            "msg":f"creating new job ({job_id}) to transcode {src.path} to {src.output.path}"
-        })
+        json.dumps(info_json)
     )
     sys.stdout.flush()
     job_spec = {
@@ -147,6 +149,7 @@ def start_transcode(src: Source):
     try:
         batch_api = client.BatchV1Api()
         batch_api.create_namespaced_job("postings", job_spec)
+        src.post_to_teams(info_json)
     except client.exceptions.ApiException as e:
         if e.status == 409:
             print(f"job already exists")

@@ -1,2 +1,3 @@
 Kubernetes
 ffmpeg-python
+requests
