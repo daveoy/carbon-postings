@@ -13,7 +13,7 @@ config.load_incluster_config()
 
 JOBS_ROOT = '/mnt/jobs'
 def get_sources(d: str):
-    return [Source(x) for x in glob.glob(f"{os.path.join(JOBS_ROOT,d,'library/postings/source')}/**/*.mov",recursive=True)]
+    return [Source(x) for x in glob.glob(f"{os.path.join(JOBS_ROOT,d,'library/postings/source')}/**/*.mov",recursive=True) if len(x.split(os.path.sep)) >= 8]
 
 def check_job_running(path):
     batch_api = client.BatchV1Api()
