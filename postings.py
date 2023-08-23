@@ -59,7 +59,6 @@ class Source:
                     pix_fmt="yuv420p",
                     profile="main",
                     movflags="+faststart",
-                    crf="17",
                     maxrate="12M",
                     bufsize="12M"
                     )
