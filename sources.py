@@ -172,7 +172,10 @@ if __name__ == "__main__":
         )
         sys.stdout.flush()
         for job in os.listdir(JOBS_ROOT):
-            [start_transcode(x) for x in get_sources(job) if x.output.transcoded == False and check_job_running(x.path) == False]
+            try:
+                [start_transcode(x) for x in get_sources(job) if x.output.transcoded == False and check_job_running(x.path) == False]
+            except TypeError:
+                print(f"job {job} has paths that do not comply")
         time.sleep(60)
         loop_time = time.time() - start_time
         print(
