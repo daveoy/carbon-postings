@@ -10,8 +10,10 @@ class Transcode:
         self.clean_source_date = source.date.replace('_','').replace('-','').replace(' ','')
         self.date = f"{self.clean_source_date[0:4]}_{self.clean_source_date[4:6]}_{self.clean_source_date[6:8]}_{source.time}"
         self.container = source.container.replace(
-            f"source/{source.date}/{source.time}",
-            f"transcode/{self.date}"
+            '/source/','/transcode/'
+        ).replace(
+            f"{source.date}/{source.time}",
+            f"{self.date}"
         )
         self.path = os.path.join(self.container,self.filename)
         self.transcoded = self.check_transcoded()
