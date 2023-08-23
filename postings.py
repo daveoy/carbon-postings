@@ -51,7 +51,13 @@ class Source:
         (
             ffmpeg
                 .input(self.path)
-                .output(self.output.path,qmax=69,brand="mp42",vcodec="libx264")
+                .output(
+                    self.output.path,
+                    qmax=69,
+                    brand="mp42",
+                    vcodec="libx264",
+                    format="yuv420p",
+                    )
                 .run(overwrite_output=True)
         )
 
