@@ -26,7 +26,7 @@ def check_job_running(path):
 def start_transcode(src: Source):
     job_id = str(uuid.uuid4())
     info_json = {
-        "event":"sources",
+        "event_source":"sources",
         "job":job_id,
         "project": src.project,
         "date": src.date,
