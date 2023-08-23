@@ -57,6 +57,11 @@ class Source:
                     brand="mp42",
                     vcodec="libx264",
                     pix_fmt="yuv420p",
+                    profile="main",
+                    movflags="+faststart",
+                    crf="17",
+                    maxrate="12M",
+                    bufsize="12M"
                     )
                 .run(overwrite_output=True)
         )
