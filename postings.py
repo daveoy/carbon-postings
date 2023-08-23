@@ -28,12 +28,11 @@ class Source:
         self.path = path
         self.container = os.path.split(path)[-2]
         self.filename = self.path.split(os.path.sep)[-1]
-        self.time = self.path.split(os.path.sep)[-2]
-        self.date = self.path.split(os.path.sep)[-3]
+        self.time = self.path.split(os.path.sep)[8]
+        self.date = self.path.split(os.path.sep)[7]
         self.project = self.path.split(os.path.sep)[3]
         self.output = Transcode(self)
         self.webhookURL = "https://whitehousepost.webhook.office.com/webhookb2/dd6f12b1-92cd-42b8-bf21-fae1b5055581@f2cc8bed-6791-456d-833e-0a8d2c1ee8f6/IncomingWebhook/fb9729e5b6cd42a0b3d3534d645485b1/e7d508af-cd60-4109-a3a8-251f6085c3df"
-
     def post_to_teams(self,msg_json):
         headers = {
             "content-type":"application/json"
@@ -45,7 +44,6 @@ class Source:
             "color":"green"
         }
         requests.post('https://engineering.carbonvfx.com/postToTeamsJSON',headers=headers,data=json.dumps(body))
-
     def transcode(self):
         self.output.ensure_container_exists()
         (
@@ -61,7 +59,7 @@ class Source:
                     movflags="+faststart",
                     maxrate="12M",
                     bufsize="12M"
-                    )
+                )
                 .run(overwrite_output=True)
         )
 
